@@ -13,6 +13,21 @@ const SLOT_DEFS = [
 const POS_ORDER = ["QB", "RB", "WR", "TE", "HC"];
 const POS_LABEL = { QB: "Quarterbacks", RB: "Running Backs", WR: "Wide Receivers", TE: "Tight Ends", HC: "Head Coach" };
 
+// Column header + format type per position (index matches the STATS value arrays).
+const STAT_COLS = {
+  QB: [["YDS", "comma"], ["TD", "int"], ["RTG", "dec"]],
+  RB: [["YDS", "comma"], ["TD", "int"], ["YPC", "dec"]],
+  WR: [["REC", "int"], ["YDS", "comma"], ["TD", "int"]],
+  TE: [["REC", "int"], ["YDS", "comma"], ["TD", "int"]],
+  HC: [["WINS", "int"], ["TITLES", "int"]],
+};
+function fmtStat(val, type) {
+  if (val == null) return "—";
+  if (type === "comma") return val.toLocaleString("en-US");
+  if (type === "dec") return val.toFixed(1);
+  return String(val);
+}
+
 // Every (team, decade) that has at least one player, for fast random rolls.
 const ALL_CELLS = [];
 for (const t of Object.keys(CELLS)) {
@@ -144,31 +159,34 @@ function renderCard() {
   card.style.setProperty("--team", t.color);
   card.style.setProperty("--team-alt", t.alt);
 
-  let rows = "";
+  let blocks = "";
   for (const pos of POS_ORDER) {
     const players = (cell[pos] || []).slice().sort((a, b) => b.s - a.s);
     if (!players.length) continue;
     const posOpen = open.has(pos);
-    players.forEach((p) => {
-      const career = hide ? "—" : p.st;
+    const cols = STAT_COLS[pos];
+    const headStats = cols.map((c) => `<th class="c-num">${c[0]}</th>`).join("");
+    const rows = players.map((p) => {
+      const v = (STATS[pos] && STATS[pos][p.n]) || null;
+      const statCells = cols.map((c, i) => {
+        const val = hide ? "—" : (v ? fmtStat(v[i], c[1]) : "—");
+        return `<td class="c-num">${val}</td>`;
+      }).join("");
       const ovr = hide ? "—" : p.s;
-      const lock = posOpen ? "" : '<span class="locktag">filled</span>';
-      rows += `<tr class="prow${posOpen ? "" : " disabled"}"${posOpen ? ` data-name="${encodeURIComponent(p.n)}" data-pos="${p.pos}"` : ""}>
-        <td class="c-pos">${pos === "WR" ? "WR" : pos}</td>
-        <td class="c-name">${p.n} ${lock}</td>
-        <td class="c-stat">${career}</td>
-        <td class="c-ovr">${ovr}</td></tr>`;
-    });
+      return `<tr class="prow${posOpen ? "" : " disabled"}"${posOpen ? ` data-name="${encodeURIComponent(p.n)}" data-pos="${p.pos}"` : ""}>
+        <td class="c-name">${p.n}</td>${statCells}<td class="c-num c-ovr">${ovr}</td></tr>`;
+    }).join("");
+    blocks += `<div class="pos-block${posOpen ? "" : " filledpos"}">
+      <div class="pos-title">${POS_LABEL[pos]}${posOpen ? "" : ' <span class="locktag">slot filled</span>'}</div>
+      <table class="ptable">
+        <thead><tr><th class="c-name">Player</th>${headStats}<th class="c-num c-ovr">OVR</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>`;
   }
 
   card.innerHTML = `<div class="card-bar"></div>
     <div class="card-head"><span class="card-team">${teamLabel(team)}</span><span class="card-era">${decade}</span></div>
-    <div class="card-body">
-      <table class="ptable">
-        <thead><tr><th class="c-pos">POS</th><th class="c-name">Player</th><th class="c-stat">Career</th><th class="c-ovr">OVR</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>`;
+    <div class="card-body">${blocks}</div>`;
 
   card.querySelectorAll(".prow:not(.disabled)").forEach((tr) => {
     tr.addEventListener("click", () => {

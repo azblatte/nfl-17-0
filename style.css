@@ -137,38 +137,37 @@ body {
 .card-head { display: flex; align-items: baseline; justify-content: space-between; padding: 12px 16px 4px; }
 .card-team { font-size: 20px; font-weight: 900; letter-spacing: -.4px; }
 .card-era { font-weight: 800; color: var(--gold); }
-.card-body { padding: 4px 10px 12px; }
+.card-body { padding: 4px 12px 14px; display: flex; flex-direction: column; gap: 14px; }
 
-/* player stat table */
+/* per-position stat tables */
+.pos-block.filledpos { opacity: .42; }
+.pos-title { font-size: 11px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); margin: 4px 0 4px; }
+.locktag { color: var(--green); font-weight: 700; font-size: 10px; letter-spacing: .4px; }
+
 .ptable { width: 100%; border-collapse: collapse; font-size: 14px; }
 .ptable thead th {
-  text-align: left;
-  font-size: 10px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase;
-  color: var(--muted);
-  padding: 6px 8px;
-  border-bottom: 1px solid var(--line);
+  font-size: 10px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase;
+  color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); text-align: right;
 }
-.ptable th.c-ovr, .ptable td.c-ovr { text-align: right; }
-.ptable .c-pos { width: 42px; }
-.ptable .c-ovr { width: 46px; }
+.ptable thead th.c-name { text-align: left; }
+.ptable .c-name { text-align: left; width: 40%; }
+.ptable .c-num { text-align: right; width: 56px; font-variant-numeric: tabular-nums; }
 
 .prow { cursor: pointer; transition: background .12s; }
-.prow td { padding: 9px 8px; border-bottom: 1px solid rgba(42,52,69,.55); vertical-align: middle; }
+.prow td { padding: 8px 6px; border-bottom: 1px solid rgba(42,52,69,.5); }
 .prow:last-child td { border-bottom: none; }
 .prow:hover:not(.disabled) td { background: #16202e; }
 .prow:hover:not(.disabled) .c-name { color: var(--gold); }
-.prow.disabled { opacity: .38; cursor: not-allowed; }
+.prow.disabled { opacity: .4; cursor: not-allowed; }
 
-.c-pos { font-weight: 800; color: var(--gold); font-size: 11px; }
 .c-name { font-weight: 700; color: var(--text); }
-.c-stat { color: var(--muted); font-size: 12px; }
-.c-ovr { font-weight: 900; color: var(--text); font-variant-numeric: tabular-nums; }
-.locktag { color: var(--green); font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: .4px; }
+.c-num { color: var(--muted); font-size: 13px; }
+.c-ovr { font-weight: 900; color: var(--gold); font-size: 14px; }
 
 @media (max-width: 520px) {
-  .ptable { font-size: 13px; }
-  .c-stat { font-size: 11px; }
-  .prow td { padding: 8px 5px; }
+  .ptable { font-size: 12.5px; }
+  .ptable .c-num { width: 44px; font-size: 12px; }
+  .prow td { padding: 7px 4px; }
 }
 
 /* controls */
