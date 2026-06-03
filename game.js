@@ -144,31 +144,36 @@ function renderCard() {
   card.style.setProperty("--team", t.color);
   card.style.setProperty("--team-alt", t.alt);
 
-  let groups = "";
+  let rows = "";
   for (const pos of POS_ORDER) {
     const players = (cell[pos] || []).slice().sort((a, b) => b.s - a.s);
     if (!players.length) continue;
     const posOpen = open.has(pos);
-    const chips = players.map((p) => {
-      const disabled = !posOpen;
-      const stat = hide ? "" : `<span class="chip-stat">${p.st}</span>`;
-      const score = hide ? "" : `<span class="chip-score">${p.s}</span>`;
-      return `<button class="chip${disabled ? " disabled" : ""}" data-name="${encodeURIComponent(p.n)}" data-pos="${p.pos}"${disabled ? " disabled" : ""}>
-        <span class="chip-name">${p.n}</span>${stat}${score}</button>`;
-    }).join("");
-    groups += `<div class="pos-group${posOpen ? "" : " filledpos"}">
-      <div class="pos-head">${POS_LABEL[pos]}${posOpen ? "" : ' <span class="locktag">slot filled</span>'}</div>
-      <div class="chips">${chips}</div></div>`;
+    players.forEach((p) => {
+      const career = hide ? "—" : p.st;
+      const ovr = hide ? "—" : p.s;
+      const lock = posOpen ? "" : '<span class="locktag">filled</span>';
+      rows += `<tr class="prow${posOpen ? "" : " disabled"}"${posOpen ? ` data-name="${encodeURIComponent(p.n)}" data-pos="${p.pos}"` : ""}>
+        <td class="c-pos">${pos === "WR" ? "WR" : pos}</td>
+        <td class="c-name">${p.n} ${lock}</td>
+        <td class="c-stat">${career}</td>
+        <td class="c-ovr">${ovr}</td></tr>`;
+    });
   }
 
   card.innerHTML = `<div class="card-bar"></div>
     <div class="card-head"><span class="card-team">${teamLabel(team)}</span><span class="card-era">${decade}</span></div>
-    <div class="card-body">${groups}</div>`;
+    <div class="card-body">
+      <table class="ptable">
+        <thead><tr><th class="c-pos">POS</th><th class="c-name">Player</th><th class="c-stat">Career</th><th class="c-ovr">OVR</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
 
-  card.querySelectorAll(".chip:not(.disabled)").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const name = decodeURIComponent(btn.dataset.name);
-      const pos = btn.dataset.pos;
+  card.querySelectorAll(".prow:not(.disabled)").forEach((tr) => {
+    tr.addEventListener("click", () => {
+      const name = decodeURIComponent(tr.dataset.name);
+      const pos = tr.dataset.pos;
       const player = (cell[pos] || []).find((p) => p.n === name);
       if (player) pickPlayer(player);
     });
