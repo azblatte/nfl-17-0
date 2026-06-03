@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>17-0 — Can you build an undefeated NFL roster?</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+
+  <header class="topbar">
+    <h1 class="logo"><span>17</span><i>–</i><span>0</span></h1>
+    <p class="tag">Spin the eras. Draft the legends. Can you build a roster that goes <b>undefeated</b>?</p>
+  </header>
+
+  <!-- START -->
+  <section id="start" class="panel">
+    <p class="intro">A slot machine rolls a random <b>team</b> and <b>decade</b> for each roster spot.
+      Draft the best player available, fill all six slots, and run your all-time roster through the
+      <b>17-game</b> win projection. Go 17-0 and you join the immortals.</p>
+    <div class="lineup-preview">QB · RB · WR · WR · TE · HEAD COACH</div>
+    <div class="mode-pick">
+      <button id="play-classic" class="btn big">Play Classic<small>Stats shown</small></button>
+      <button id="play-gridiq" class="btn big ghost">Play GridIQ<small>Stats hidden</small></button>
+    </div>
+    <a class="how" href="how-to-play.html">How to play →</a>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" class="panel hidden">
+    <div class="game-head">
+      <span id="mode-tag" class="pill">Classic Mode</span>
+      <h2 id="slot-title">Still need: QB, RB, WR, TE, HC</h2>
+    </div>
+
+    <div id="roster" class="roster"></div>
+
+    <div class="machine">
+      <div class="reel"><label>TEAM</label><div id="team-reel" class="reel-val">—</div></div>
+      <div class="reel"><label>DECADE</label><div id="decade-reel" class="reel-val">—</div></div>
+    </div>
+
+    <p class="card-hint">Pick a player from this team's era to fill an open slot.</p>
+    <div id="card" class="card empty"><p>Spinning…</p></div>
+
+    <div class="controls">
+      <button id="team-skip" class="btn ghost">Team Skip (1)</button>
+      <button id="decade-skip" class="btn ghost">Decade Skip (1)</button>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="result" class="panel hidden">
+    <h2 class="result-title">Regular Season</h2>
+    <div id="record" class="record">—</div>
+    <div id="strength" class="strength"></div>
+    <div id="epilogue" class="epilogue"></div>
+    <p id="verdict" class="verdict"></p>
+    <div id="final-roster" class="final-roster"></div>
+    <button id="again" class="btn big primary">Run it back</button>
+  </section>
+
+  <footer class="footer">
+    <a href="how-to-play.html">How to Play</a>
+    <span>·</span>
+    <span>An independent fan game. Not affiliated with the NFL.</span>
+  </footer>
+
+</div>
+
+<script src="teams.js"></script>
+<script src="players.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
